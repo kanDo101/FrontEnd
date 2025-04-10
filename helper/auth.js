@@ -1,6 +1,0 @@
-const login =()=>{
-
-}
-const signup =()=>{
-    
-}
