@@ -204,6 +204,22 @@ body {
     background: var(--accent-color);
     animation-delay: 4s;
 }
+.shape:nth-child(6) {
+    width: 120px;
+    height: 120px;
+    top: 50%;
+    left: 75%;
+    background: var(--accent-color);
+    animation-delay: 4s;
+}
+.shape:nth-child(5) {
+    width: 120px;
+    height: 120px;
+    top: 50%;
+    left: 75%;
+    background: var(--accent-color);
+    animation-delay: 4s;
+}
 @keyframes float {
     0% {
         transform: translate(0, 0) rotate(0deg);
@@ -314,7 +330,8 @@ h1 {
 .btn-small {
     padding:0px 35px;  
     font-size: 0.9rem;
-    border-radius: 8px;  
+    border-radius: 10px;
+    border-color:white; ;
     background-color: var(--primary-color);
     color: #fff;  
     cursor: pointer; 
