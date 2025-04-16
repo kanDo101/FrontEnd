@@ -5,7 +5,7 @@ session_start();
 // Check if user is logged in
 if (!isset($_SESSION["user_id"])) {
     // Redirect to login page if not logged in
-    header("Location: ../auth/SignUp/login.php");
+    header("Location: http://localhost/KANDO/FrontEnd/auth/signUp&signin/signup.html");
     exit();
 }
 
@@ -104,11 +104,10 @@ function getProjectProgress($conn, $project_id)
 }
 
 // Get the current theme preference from cookie
-$theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light';
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-theme="<?php echo $theme; ?>">
+<html lang="en" >
 
 <head>
     <meta charset="UTF-8">
@@ -117,208 +116,213 @@ $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard.css">
     <style>
-.project-header{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin-bottom: 20px;
-}
-.add-project-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-/* Section header with add button */
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+        .project-header {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-.add-project-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s;
-}
+        .add-project-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-.add-project-btn:hover {
-    background-color: var(--secondary-color);
-}
+        /* Section header with add button */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
+        .add-project-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
 
-.modal-content {
-    background-color: var(--bg-color);
-    border-radius: 8px;
-    padding: 25px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-}
+        .add-project-btn:hover {
+            background-color: var(--secondary-color);
+        }
 
-.close-modal {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--text-color);
-}
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
 
-/* Form styles */
-.form-group {
-    margin-bottom: 20px;
-}
+        .modal-content {
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            padding: 25px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: var(--text-color);
-}
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
 
-.form-group input, 
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+        /* Form styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-}
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
 
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
 
-.cancel-btn {
-    background-color: var(--bg-secondary);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        }
 
-.submit-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
 
-/* Team member search and selection */
-.search-results {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    margin-top: 5px;
-    display: none;
-}
+        .cancel-btn {
+            background-color: var(--bg-secondary);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-.search-result-item {
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-.search-result-item:hover {
-    background-color: var(--bg-secondary);
-}
+        /* Team member search and selection */
+        .search-results {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-top: 5px;
+            display: none;
+        }
 
-.selected-members {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
-}
+        .search-result-item {
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
 
-.selected-member {
-    display: flex;
-    align-items: center;
-    background-color: var(--bg-secondary);
-    border-radius: 20px;
-    padding: 5px 10px;
-    gap: 8px;
-}
+        .search-result-item:hover {
+            background-color: var(--bg-secondary);
+        }
 
-.selected-member img {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-}
+        .selected-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
 
-.remove-member {
-    cursor: pointer;
-    font-size: 12px;
-}
-.search-result-item img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover; 
-}
+        .selected-member {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 5px 10px;
+            gap: 8px;
+        }
 
-#memberSearch {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    margin-bottom: 5px;
-}
+        .selected-member img {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+        }
 
-.search-result-item {
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border-color);
-}
+        .remove-member {
+            cursor: pointer;
+            font-size: 12px;
+        }
 
-.search-result-item:last-child {
-    border-bottom: none;
-}
+        .search-result-item img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        #memberSearch {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .search-result-item {
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
     </style>
+    <script src="./helper/toggle.js"></script>
+
 </head>
 
 <body>
@@ -344,6 +348,7 @@ $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light';
                     <a href="logout.php" class="dropdown-item">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
+
                 </div>
             </div>
         </div>
@@ -351,13 +356,13 @@ $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light';
 
     <div class="container">
         <div class="projects-container">
-        <div class="project-header">
-        <h2 class="section-title">My Projects</h2>
-            <button class="add-project-btn" id="addProjectBtn">
-                <i class="fas fa-plus"></i> Add New Project
-            </button> 
-        </div>
-            
+            <div class="project-header">
+                <h2 class="section-title">My Projects</h2>
+                <button class="add-project-btn" id="addProjectBtn">
+                    <i class="fas fa-plus"></i> Add New Project
+                </button>
+            </div>
+
             <div class="project-grid">
                 <?php if ($created_projects->num_rows > 0): ?>
                     <?php while ($project = $created_projects->fetch_assoc()): ?>
@@ -373,7 +378,8 @@ $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light';
                             $color = 'var(--secondary-color)';
                         }
                         ?>
-                        <div class="project-card" onclick="window.location='project.php?projectId=<?php echo $project['id']; ?>'">
+                        <div class="project-card"
+                            onclick="window.location='project.php?projectId=<?php echo $project['id']; ?>'">
                             <h3 class="project-title"><?php echo htmlspecialchars($project['name']); ?></h3>
                             <p class="project-description"><?php echo htmlspecialchars($project['description']); ?></p>
                             <div class="project-meta">
@@ -421,7 +427,8 @@ $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light';
                             $color = 'var(--secondary-color)';
                         }
                         ?>
-                        <div class="project-card" onclick="window.location='project.php?projectId=<?php echo $project['id']; ?>'">
+                        <div class="project-card"
+                            onclick="window.location='project.php?projectId=<?php echo $project['id']; ?>'">
                             <h3 class="project-title"><?php echo htmlspecialchars($project['name']); ?></h3>
                             <p class="project-description"><?php echo htmlspecialchars($project['description']); ?></p>
                             <div class="project-meta">
@@ -452,162 +459,145 @@ $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light';
             </div>
         </div>
     </div>
-<!-- Add Project Modal -->
-<div id="projectModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2>Create New Project</h2>
-        
-        <form id="addProjectForm" method="POST" action="add_project.php">
-            <div class="form-group">
-                <label for="projectName">Project Name</label>
-                <input type="text" id="projectName" name="projectName" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="projectDescription">Description</label>
-                <textarea id="projectDescription" name="projectDescription" rows="3"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="dueDate">Due Date</label>
-                <input type="date" id="dueDate" name="dueDate" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="teamMembers">Team Members</label>
-                <div class="selected-members" id="selectedMembers"></div>
-                <input type="text" id="memberSearch" placeholder="Search users...">
-                <div id="searchResults" class="search-results"></div>
-                <input type="hidden" id="memberIds" name="memberIds">
-            </div>
-            
-            <div class="form-actions">
-                <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
-                <button type="submit" class="submit-btn">Create Project</button>
-            </div>
-        </form>
+    <!-- Add Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create New Project</h2>
+
+            <form id="addProjectForm" method="POST" action="add_project.php">
+                <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" name="projectName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="projectDescription">Description</label>
+                    <textarea id="projectDescription" name="projectDescription" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="date" id="dueDate" name="dueDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="teamMembers">Team Members</label>
+                    <div class="selected-members" id="selectedMembers"></div>
+                    <input type="text" id="memberSearch" placeholder="Search users...">
+                    <div id="searchResults" class="search-results"></div>
+                    <input type="hidden" id="memberIds" name="memberIds">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="submit-btn">Create Project</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
     <script>
         // Modal functionality
-const modal = document.getElementById('projectModal');
-const addProjectBtn = document.getElementById('addProjectBtn');
-const closeModal = document.querySelector('.close-modal');
-const cancelBtn = document.getElementById('cancelBtn');
+        const modal = document.getElementById('projectModal');
+        const addProjectBtn = document.getElementById('addProjectBtn');
+        const closeModal = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelBtn');
 
-addProjectBtn.addEventListener('click', () => {
-    modal.style.display = 'flex';
-});
+        addProjectBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
 
-function closeProjectModal() {
-    modal.style.display = 'none';
-    // Reset form
-    document.getElementById('addProjectForm').reset();
-    document.getElementById('selectedMembers').innerHTML = '';
-    document.getElementById('memberIds').value = '';
-}
+        function closeProjectModal() {
+            modal.style.display = 'none';
+            // Reset form
+            document.getElementById('addProjectForm').reset();
+            document.getElementById('selectedMembers').innerHTML = '';
+            document.getElementById('memberIds').value = '';
+        }
 
-closeModal.addEventListener('click', closeProjectModal);
-cancelBtn.addEventListener('click', closeProjectModal);
+        closeModal.addEventListener('click', closeProjectModal);
+        cancelBtn.addEventListener('click', closeProjectModal);
 
-// Close modal when clicking outside
-window.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        closeProjectModal();
-    }
-});
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeProjectModal();
+            }
+        });
 
-// Team member search functionality
-const memberSearch = document.getElementById('memberSearch');
-const searchResults = document.getElementById('searchResults');
-const selectedMembers = document.getElementById('selectedMembers');
-const memberIdsInput = document.getElementById('memberIds');
-let selectedMemberIds = [];
+        // Team member search functionality
+        const memberSearch = document.getElementById('memberSearch');
+        const searchResults = document.getElementById('searchResults');
+        const selectedMembers = document.getElementById('selectedMembers');
+        const memberIdsInput = document.getElementById('memberIds');
+        let selectedMemberIds = [];
 
-memberSearch.addEventListener('input', () => {
-    const searchTerm = memberSearch.value.trim();
-    
-    if (searchTerm.length < 2) {
-        searchResults.style.display = 'none';
-        return;
-    }
-    
-    // Fetch users that match search term
-    fetch(`search_users.php?term=${encodeURIComponent(searchTerm)}`)
-        .then(response => response.json())
-        .then(users => {
-            if (users.length > 0) {
-                searchResults.innerHTML = '';
-                users.forEach(user => {
-                    // Skip if already selected
-                    if (selectedMemberIds.includes(user.id)) return;
-                    
-                    const item = document.createElement('div');
-                    item.className = 'search-result-item';
-                    item.innerHTML = `
+        memberSearch.addEventListener('input', () => {
+            const searchTerm = memberSearch.value.trim();
+
+            if (searchTerm.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            // Fetch users that match search term
+            fetch(`search_users.php?term=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(users => {
+                    if (users.length > 0) {
+                        searchResults.innerHTML = '';
+                        users.forEach(user => {
+                            // Skip if already selected
+                            if (selectedMemberIds.includes(user.id)) return;
+
+                            const item = document.createElement('div');
+                            item.className = 'search-result-item';
+                            item.innerHTML = `
                         <img src="${user.photo || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'}" alt="${user.username}">
                         <span>${user.username}</span>
                     `;
-                    
-                    item.addEventListener('click', () => {
-                        addTeamMember(user);
-                        searchResults.style.display = 'none';
-                        memberSearch.value = '';
-                    });
-                    
-                    searchResults.appendChild(item);
-                });
-                searchResults.style.display = 'block';
-            } else {
-                searchResults.innerHTML = '<div class="search-result-item">No users found</div>';
-                searchResults.style.display = 'block';
-            }
-        });
-});
 
-function addTeamMember(user) {
-    if (selectedMemberIds.includes(user.id)) return;
-    
-    selectedMemberIds.push(user.id);
-    memberIdsInput.value = JSON.stringify(selectedMemberIds);
-    
-    const memberElement = document.createElement('div');
-    memberElement.className = 'selected-member';
-    memberElement.innerHTML = `
+                            item.addEventListener('click', () => {
+                                addTeamMember(user);
+                                searchResults.style.display = 'none';
+                                memberSearch.value = '';
+                            });
+
+                            searchResults.appendChild(item);
+                        });
+                        searchResults.style.display = 'block';
+                    } else {
+                        searchResults.innerHTML = '<div class="search-result-item">No users found</div>';
+                        searchResults.style.display = 'block';
+                    }
+                });
+        });
+
+        function addTeamMember(user) {
+            if (selectedMemberIds.includes(user.id)) return;
+
+            selectedMemberIds.push(user.id);
+            memberIdsInput.value = JSON.stringify(selectedMemberIds);
+
+            const memberElement = document.createElement('div');
+            memberElement.className = 'selected-member';
+            memberElement.innerHTML = `
         <img src="${user.photo || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'}" alt="${user.username}">
         <span>${user.username}</span>
         <span class="remove-member" data-id="${user.id}">×</span>
     `;
-    
-    memberElement.querySelector('.remove-member').addEventListener('click', function() {
-        const userId = parseInt(this.getAttribute('data-id'));
-        selectedMemberIds = selectedMemberIds.filter(id => id !== userId);
-        memberIdsInput.value = JSON.stringify(selectedMemberIds);
-        memberElement.remove();
-    });
-    
-    selectedMembers.appendChild(memberElement);
-}
-        // Theme toggle functionality
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem("theme", "light");
-            // Update icon
-            const themeIcon = document.querySelector('#themeToggle i');
-            if (newTheme === 'dark') {
-                themeIcon.className = 'fas fa-sun';
-            } else {
-                themeIcon.className = 'fas fa-moon';
-            }
 
-            // Update circles
-            updateCircleColors();
+            memberElement.querySelector('.remove-member').addEventListener('click', function () {
+                const userId = parseInt(this.getAttribute('data-id'));
+                selectedMemberIds = selectedMemberIds.filter(id => id !== userId);
+                memberIdsInput.value = JSON.stringify(selectedMemberIds);
+                memberElement.remove();
+            });
+
+            selectedMembers.appendChild(memberElement);
         }
-
+        
         // Avatar dropdown functionality
         const avatarImg = document.getElementById('avatarImg');
         const userDropdown = document.getElementById('userDropdown');
