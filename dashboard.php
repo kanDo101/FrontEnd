@@ -107,7 +107,7 @@ function getProjectProgress($conn, $project_id)
 ?>
 
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -298,6 +298,109 @@ function getProjectProgress($conn, $project_id)
             object-fit: cover;
         }
 
+        /* Project actions buttons */
+        .project-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .project-card {
+            position: relative;
+        }
+
+        .project-card:hover .project-actions {
+            opacity: 1;
+        }
+
+        .project-actions button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-secondary);
+        }
+
+        .project-actions button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .project-actions .edit-project:hover {
+            background-color: var(--primary-color);
+        }
+
+        .project-actions .delete-project:hover {
+            background-color: var(--accent-color);
+        }
+
+        /* Delete confirmation dialog */
+        .delete-confirmation {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .delete-confirmation-content {
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .delete-confirmation h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .delete-confirmation p {
+            margin-bottom: 25px;
+        }
+
+        .delete-confirmation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .delete-confirmation-buttons button {
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cancel-delete {
+            background-color: var(--bg-secondary);
+            color: var(--text-color);
+        }
+
+        .confirm-delete {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+
         #memberSearch {
             width: 100%;
             padding: 10px;
@@ -378,27 +481,39 @@ function getProjectProgress($conn, $project_id)
                             $color = 'var(--secondary-color)';
                         }
                         ?>
-                        <div class="project-card"
-                            onclick="window.location='project.php?projectId=<?php echo $project['id']; ?>'">
-                            <h3 class="project-title"><?php echo htmlspecialchars($project['name']); ?></h3>
-                            <p class="project-description"><?php echo htmlspecialchars($project['description']); ?></p>
-                            <div class="project-meta">
-                                <div class="project-members">
-                                    <?php foreach ($Appartenir as $member): ?>
-                                        <img src="<?php echo htmlspecialchars($member); ?>" alt="Team Member"
-                                            class="project-member">
-                                    <?php endforeach; ?>
-                                    <?php if ($project['member_count'] > 4): ?>
-                                        <span style="margin-left: 5px;">+<?php echo $project['member_count'] - 4; ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <span>Due: <?php echo date('M d', strtotime($project['dueDate'])); ?></span>
+                        <div class="project-card">
+                            <div class="project-actions">
+                                <button class="edit-project" data-project-id="<?php echo $project['id']; ?>">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="delete-project" data-project-id="<?php echo $project['id']; ?>">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
-                            <div class="project-progress">
-                                <div class="progress-bar"
-                                    style="width: <?php echo $progress; ?>%; background-color: <?php echo $color; ?>;"></div>
+                            <div class="project-content"
+                                onclick="window.location='project.php?projectId=<?php echo $project['id']; ?>'">
+                                <h3 class="project-title"><?php echo htmlspecialchars($project['name']); ?></h3>
+                                <p class="project-description"><?php echo htmlspecialchars($project['description']); ?></p>
+                                <div class="project-meta">
+                                    <div class="project-members">
+                                        <?php foreach ($Appartenir as $member): ?>
+                                            <img src="<?php echo htmlspecialchars($member); ?>" alt="Team Member"
+                                                class="project-member">
+                                        <?php endforeach; ?>
+                                        <?php if ($project['member_count'] > 4): ?>
+                                            <span style="margin-left: 5px;">+<?php echo $project['member_count'] - 4; ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <span>Due: <?php echo date('M d', strtotime($project['dueDate'])); ?></span>
+                                </div>
+                                <div class="project-progress">
+                                    <div class="progress-bar"
+                                        style="width: <?php echo $progress; ?>%; background-color: <?php echo $color; ?>;">
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     <?php endwhile; ?>
                 <?php else: ?>
                     <div class="empty-state">
@@ -496,8 +611,318 @@ function getProjectProgress($conn, $project_id)
             </form>
         </div>
     </div>
+<!-- Edit Project Modal -->
+<div id="editProjectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeEditModal">&times;</span>
+        <h2>Edit Project</h2>
+
+        <form id="editProjectForm" method="POST" action="update_project.php">
+            <input type="hidden" id="editProjectId" name="projectId">
+            <div class="form-group">
+                <label for="editProjectName">Project Name</label>
+                <input type="text" id="editProjectName" name="projectName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editProjectDescription">Description</label>
+                <textarea id="editProjectDescription" name="projectDescription" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="editDueDate">Due Date</label>
+                <input type="date" id="editDueDate" name="dueDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editTeamMembers">Team Members</label>
+                <div class="selected-members" id="editSelectedMembers"></div>
+                <input type="text" id="editMemberSearch" placeholder="Search users...">
+                <div id="editSearchResults" class="search-results"></div>
+                <input type="hidden" id="editMemberIds" name="memberIds">
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" id="cancelEditBtn">Cancel</button>
+                <button type="submit" class="submit-btn">Update Project</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<div id="deleteConfirmation" class="delete-confirmation">
+    <div class="delete-confirmation-content">
+        <h3>Delete Project</h3>
+        <p>Are you sure you want to delete this project? This action cannot be undone.</p>
+        <input type="hidden" id="deleteProjectId" value="">
+        <div class="delete-confirmation-buttons">
+            <button class="cancel-delete" id="cancelDeleteBtn">Cancel</button>
+            <button class="confirm-delete" id="confirmDeleteBtn">Delete</button>
+        </div>
+    </div>
+</div>
 
     <script>
+        // Project Edit and Delete functionality
+const editProjectModal = document.getElementById('editProjectModal');
+const closeEditModal = document.getElementById('closeEditModal');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const editProjectForm = document.getElementById('editProjectForm');
+const deleteConfirmation = document.getElementById('deleteConfirmation');
+const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+// Add this to your existing script section
+document.getElementById('editProjectForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const projectId = document.getElementById('editProjectId').value;
+    const projectName = document.getElementById('editProjectName').value;
+    const projectDescription = document.getElementById('editProjectDescription').value;
+    const dueDate = document.getElementById('editDueDate').value;
+    
+    // Prepare data in the format expected by update_project.php
+    const data = {
+        id: parseInt(projectId),
+        name: projectName,
+        description: projectDescription,
+        dueDate: dueDate
+    };
+    
+    // Send as JSON
+    fetch('update_project.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            // Close modal and reload page to see changes
+            closeEditProjectModal();
+            window.location.reload();
+        } else {
+            alert(result.message || 'Failed to update project');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the project');
+    });
+});
+
+// Setup edit buttons
+document.querySelectorAll('.edit-project').forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent the click from propagating to the project card
+        const projectId = button.getAttribute('data-project-id');
+        loadProjectDetails(projectId);
+    });
+});
+
+// Setup delete buttons
+document.querySelectorAll('.delete-project').forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent the click from propagating to the project card
+        const projectId = button.getAttribute('data-project-id');
+        document.getElementById('deleteProjectId').value = projectId;
+        deleteConfirmation.style.display = 'flex';
+    });
+});
+
+// Close edit modal
+function closeEditProjectModal() {
+    editProjectModal.style.display = 'none';
+    // Reset form
+    document.getElementById('editProjectForm').reset();
+    document.getElementById('editSelectedMembers').innerHTML = '';
+    document.getElementById('editMemberIds').value = '';
+}
+
+closeEditModal.addEventListener('click', closeEditProjectModal);
+cancelEditBtn.addEventListener('click', closeEditProjectModal);
+
+// Close edit modal when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === editProjectModal) {
+        closeEditProjectModal();
+    }
+    if (e.target === deleteConfirmation) {
+        deleteConfirmation.style.display = 'none';
+    }
+});
+
+// Close delete confirmation
+cancelDeleteBtn.addEventListener('click', () => {
+    deleteConfirmation.style.display = 'none';
+});
+
+// Confirm delete
+confirmDeleteBtn.addEventListener('click', () => {
+    const projectId = document.getElementById('deleteProjectId').value;
+    if (projectId) {
+        // Send delete request
+        fetch('delete_project.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `projectId=${projectId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Reload the page to show the updated project list
+                window.location.reload();
+            } else {
+                alert(data.message || 'Error deleting project');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while trying to delete the project');
+        });
+    }
+    deleteConfirmation.style.display = 'none';
+});
+
+// Load project details for editing
+function loadProjectDetails(projectId) {
+    fetch(`get_project_details.php?projectId=${projectId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Populate form fields
+                document.getElementById('editProjectId').value = data.project.id;
+                document.getElementById('editProjectName').value = data.project.name;
+                document.getElementById('editProjectDescription').value = data.project.description || '';
+                document.getElementById('editDueDate').value = data.project.dueDate;
+                
+                // Clear existing members
+                document.getElementById('editSelectedMembers').innerHTML = '';
+                const selectedMembersContainer = document.getElementById('editSelectedMembers');
+                let editSelectedMemberIds = [];
+                
+                // Add team members
+                if (data.members && data.members.length > 0) {
+                    data.members.forEach(member => {
+                        editSelectedMemberIds.push(member.id);
+                        
+                        const memberElement = document.createElement('div');
+                        memberElement.className = 'selected-member';
+                        memberElement.innerHTML = `
+                            <img src="${member.photo || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'}" alt="${member.username}">
+                            <span>${member.username}</span>
+                            <span class="remove-member" data-id="${member.id}">×</span>
+                        `;
+                        
+                        memberElement.querySelector('.remove-member').addEventListener('click', function() {
+                            const userId = parseInt(this.getAttribute('data-id'));
+                            editSelectedMemberIds = editSelectedMemberIds.filter(id => id !== userId);
+                            document.getElementById('editMemberIds').value = JSON.stringify(editSelectedMemberIds);
+                            memberElement.remove();
+                        });
+                        
+                        selectedMembersContainer.appendChild(memberElement);
+                    });
+                    
+                    document.getElementById('editMemberIds').value = JSON.stringify(editSelectedMemberIds);
+                }
+                
+                // Show the modal
+                editProjectModal.style.display = 'flex';
+                
+                // Setup member search for edit modal
+                setupEditMemberSearch(editSelectedMemberIds);
+            } else {
+                alert(data.message || 'Error loading project details');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while trying to load project details');
+        });
+}
+
+// Setup member search for edit modal
+function setupEditMemberSearch(selectedIds) {
+    const memberSearch = document.getElementById('editMemberSearch');
+    const searchResults = document.getElementById('editSearchResults');
+    const selectedMembers = document.getElementById('editSelectedMembers');
+    const memberIdsInput = document.getElementById('editMemberIds');
+    let editSelectedMemberIds = selectedIds || [];
+    
+    memberSearch.addEventListener('input', () => {
+        const searchTerm = memberSearch.value.trim();
+        
+        if (searchTerm.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+        
+        // Fetch users that match search term
+        fetch(`search_users.php?term=${encodeURIComponent(searchTerm)}`)
+            .then(response => response.json())
+            .then(users => {
+                if (users.length > 0) {
+                    searchResults.innerHTML = '';
+                    users.forEach(user => {
+                        // Skip if already selected
+                        if (editSelectedMemberIds.includes(user.id)) return;
+                        
+                        const item = document.createElement('div');
+                        item.className = 'search-result-item';
+                        item.innerHTML = `
+                            <img src="${user.photo || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'}" alt="${user.username}">
+                            <span>${user.username}</span>
+                        `;
+                        
+                        item.addEventListener('click', () => {
+                            addEditTeamMember(user, editSelectedMemberIds, memberIdsInput, selectedMembers);
+                            searchResults.style.display = 'none';
+                            memberSearch.value = '';
+                        });
+                        
+                        searchResults.appendChild(item);
+                    });
+                    searchResults.style.display = 'block';
+                } else {
+                    searchResults.innerHTML = '<div class="search-result-item">No users found</div>';
+                    searchResults.style.display = 'block';
+                }
+            });
+    });
+}
+
+function addEditTeamMember(user, selectedMemberIds, memberIdsInput, selectedMembers) {
+    if (selectedMemberIds.includes(user.id)) return;
+    
+    selectedMemberIds.push(user.id);
+    memberIdsInput.value = JSON.stringify(selectedMemberIds);
+    
+    const memberElement = document.createElement('div');
+    memberElement.className = 'selected-member';
+    memberElement.innerHTML = `
+        <img src="${user.photo || 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'}" alt="${user.username}">
+        <span>${user.username}</span>
+        <span class="remove-member" data-id="${user.id}">×</span>
+    `;
+    
+    memberElement.querySelector('.remove-member').addEventListener('click', function() {
+        const userId = parseInt(this.getAttribute('data-id'));
+        const newSelectedIds = selectedMemberIds.filter(id => id !== userId);
+        // Update the original array by reference
+        selectedMemberIds.length = 0;
+        newSelectedIds.forEach(id => selectedMemberIds.push(id));
+        memberIdsInput.value = JSON.stringify(selectedMemberIds);
+        memberElement.remove();
+    });
+    
+    selectedMembers.appendChild(memberElement);
+}
+
         // Modal functionality
         const modal = document.getElementById('projectModal');
         const addProjectBtn = document.getElementById('addProjectBtn');
@@ -597,7 +1022,7 @@ function getProjectProgress($conn, $project_id)
 
             selectedMembers.appendChild(memberElement);
         }
-        
+
         // Avatar dropdown functionality
         const avatarImg = document.getElementById('avatarImg');
         const userDropdown = document.getElementById('userDropdown');
