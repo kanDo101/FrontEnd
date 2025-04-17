@@ -531,20 +531,9 @@ $conn->close();
             }
         }
     </style>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const themeToggle = document.getElementById('themeToggle');
-            const currentTheme = html.getAttribute('data-theme');
-            
-            if (currentTheme === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                html.setAttribute('data-theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        }
+    <script src="./helper/toggle.js"></script>
+
+    <script >
         
         document.addEventListener('DOMContentLoaded', function() {
             // Handle tab switching
