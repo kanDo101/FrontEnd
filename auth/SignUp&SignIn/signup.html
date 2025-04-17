@@ -6,17 +6,36 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
     <link rel="stylesheet" href="../land.css" />
-    <link rel="stylesheet" href="../auth.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="../../helper/toggle.js"></script>
 
     <title>Sign Up - Kando</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    />
     <style>
+      :root {
+        --primary-color: #3498db;
+        --primary-light: #e1f0fa;
+        --primary-rgb: 52, 152, 219;
+        --bg-color: #f5f7fa;
+        --card-bg: #ffffff;
+        --text-color: #333333;
+        --text-muted: #6c757d;
+        --border-color: #e1e5e9;
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        --border-radius: 8px;
+      }
+
+      .dark-theme {
+        --primary-color: #3498db;
+        --primary-light: #1a2939;
+        --primary-rgb: 52, 152, 219;
+        --bg-color: #121212;
+        --card-bg: #1e1e1e;
+        --text-color: #f0f0f0;
+        --text-muted: #bbbbbb;
+        --border-color: #2c2c2c;
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
 
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -27,10 +46,92 @@
         align-items: center;
         min-height: 100vh;
         padding: 20px;
+        margin: 0;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: var(--card-bg);
+        box-shadow: var(--shadow);
+        z-index: 100;
+        text-decoration: none;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .navbar a {
+  text-decoration: none;  
+  color: inherit;
+}
+
+
+.navbar a.logo-link {
+  text-decoration: none;
+}
+      .nav-links a {
+
+        
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+        color:inherit
+      }
+
+      .nav-links a:hover {
+        color: var(--primary-color);
+      }
+
+      .btn-small {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        padding: 8px 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-small:hover {
+        background-color: #2980b9;
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 18px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        color: var(--primary-color);
       }
 
       .signup-container {
-        margin-top: 20px;
+        margin-top: 80px;
         box-shadow: var(--shadow);
         z-index: 10;
         background-color: var(--card-bg);
@@ -38,13 +139,40 @@
         width: 100%;
         max-width: 700px;
         padding: 40px;
-        max-height:  80%; ;
+        max-height: 80vh;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
       }
+
+      .signup-container.hidden {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      .signup-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .signup-header h2 {
+        font-size: 32px;
+        margin-bottom: 10px;
+        color: var(--primary-color);
+      }
+
+      .signup-header p {
+        color: var(--text-muted);
+        font-size: 16px;
+      }
+
       form {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
+        width: 100%;
       }
+
       .form-column {
         display: flex;
         flex-direction: column;
@@ -56,209 +184,310 @@
       .form-group {
         display: flex;
         flex-direction: column;
+        margin-bottom: 0;
       }
 
-      .form-group input:focus {
+      .form-group label {
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+
+      .form-group input,
+      .form-group2 input {
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group2 input:focus {
         border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+        outline: none;
       }
 
+      .form-group2 {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 20px;
+      }
 
+      .form-group2 label {
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-color);
+        width: 100%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
 
-.signup-container {
-    margin-top: 20px;
-    box-shadow: var(--shadow);
-    z-index: 10;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    width: 100%;
-    max-width: 700px;
-    padding: 40px;
-    max-height: 90vh;
-    overflow-y: auto;
-    transition: all 0.3s ease;
-    transform: translateY(0);
-    opacity: 1;
-}
+      .form-group2 input {
+        width: 100%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+      }
 
-.signup-container.hidden {
-    transform: translateY(20px);
-    opacity: 0;
-}
+      .btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: var(--border-radius);
+        background-color: var(--primary-color);
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+      }
 
-.signup-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
+      .btn:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+      }
 
-.signup-header h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
-    color: var(--primary-color);
-}
-
-.signup-header p {
-    color: var(--text-muted);
-    font-size: 16px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-
-
-.form-group input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
-    outline: none;
-}
-
-.btn {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: var(--border-radius);
-    background-color: var(--primary-color);
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 10px;
-}
-
-.btn:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-2px);
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-.login-link {
-    text-align: center;
-    margin-top: 20px;
-    color: var(--text-muted);
-}
-
-.login-link a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.login-link a:hover {
-    text-decoration: underline;
-}
-
-.alternative-signup {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.alternative-signup p {
-    color: var(--text-muted);
-    margin-bottom: 15px;
-    position: relative;
-}
-
-.alternative-signup p::before,
-.alternative-signup p::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 30%;
-    height: 1px;
-    background-color: var(--border-color);
-}
-
-.alternative-signup p::before {
-    left: 0;
-}
-
-.alternative-signup p::after {
-    right: 0;
-}
-
-.social-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.social-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border-color);
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.social-btn:hover {
-    background-color: var(--primary-light);
-    color: var(--primary-color);
-    transform: translateY(-2px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .form-column {
-        flex: 100%;
-    }
-    
-    .signup-container {
-        padding: 30px 20px;
-    }
-    
-    .alternative-signup p::before,
-    .alternative-signup p::after {
-        width: 25%;
-    }
-}
-
-/* Animation for form switching */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
+      .btn:active {
         transform: translateY(0);
-    }
-}
+      }
 
-#signin, #signup {
-    animation: fadeIn 0.5s ease forwards;
-}
+      #signin .btn {
+        width: 50%;
+        max-width: 400px;
+        margin: 10px auto;
+        display: block;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+        color: var(--text-muted);
+      }
+
+      .login-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+
+      .alternative-signup {
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .alternative-signup p {
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .alternative-signup p::before,
+      .alternative-signup p::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background-color: var(--border-color);
+        margin: 0 15px;
+      }
+
+      .social-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .social-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border-color);
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .social-btn:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+      }
+
+      /* Shape animations */
+      .shape {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: linear-gradient(
+          45deg,
+          var(--primary-color),
+          rgba(var(--primary-rgb), 0.2)
+        );
+        filter: blur(60px);
+        opacity: 0.4;
+        z-index: -1;
+        animation: float 15s infinite alternate ease-in-out;
+      }
+
+      .shape:nth-child(1) {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .shape:nth-child(2) {
+        top: 20%;
+        right: 15%;
+        animation-delay: 2s;
+      }
+
+      .shape:nth-child(3) {
+        bottom: 15%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+
+      .shape:nth-child(4) {
+        bottom: 20%;
+        right: 10%;
+        animation-delay: 6s;
+      }
+
+      .shape:nth-child(5) {
+        top: 45%;
+        left: 5%;
+        animation-delay: 8s;
+      }
+
+      .shape:nth-child(6) {
+        top: 40%;
+        right: 5%;
+        animation-delay: 10s;
+      }
+
+      .shape:nth-child(7) {
+        bottom: 10%;
+        left: 40%;
+        animation-delay: 12s;
+      }
+
+      .shape:nth-child(8) {
+        top: 10%;
+        left: 40%;
+        animation-delay: 14s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-20px) scale(1.1);
+        }
+        100% {
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .form-column {
+          flex: 100%;
+        }
+
+        .signup-container {
+          padding: 30px 20px;
+        }
+
+        .navbar {
+          padding: 10px 15px;
+        }
+
+        .nav-links {
+          gap: 10px;
+        }
+
+        .nav-links a:not(:last-child) {
+          display: none;
+        }
+      }
+
+      /* Animation for form switching */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .typing {
+        overflow: hidden;
+        border-right: 3px solid var(--primary-color);
+        white-space: nowrap;
+        margin: 0 auto;
+        animation: typing 3s steps(10, end),
+          blink-caret 0.75s step-end infinite;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 75%;
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: var(--primary-color);
+        }
+      }
+
+      #signin,
+      #signup {
+        animation: fadeIn 0.5s ease forwards;
+      }
     </style>
   </head>
   <body>
     <nav class="navbar" id="navbar">
-      <a href="../landing.html"
-        ><div class="logo"><i class="fas fa-tasks"></i> Kando</div></a
-      >
+      <a href="../landing.html">
+        <div class="logo"><i class="fas fa-tasks"></i> Kando</div>
+      </a>
       <div class="nav-links">
         <a href="#features">Features</a>
         <a href="#workflow">How It Works</a>
-        <a href="" id="signInButton">Log In</a>
-        <a href="#" class="signUpButton">
+        <a href="#" id="signInButtonNav">Log In</a>
+        <a href="#" class="signUpButtonNav">
           <button class="btn-small">Sign Up Free</button>
         </a>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
@@ -266,8 +495,8 @@
         </button>
       </div>
     </nav>
-    
-    <div class="signup-container" id="signup" style="display:none;">
+
+    <div class="signup-container" id="signup" style="display: none">
       <div class="signup-header">
         <h2>Create your account</h2>
         <p>Join thousands of users today</p>
@@ -276,8 +505,8 @@
       <form action="./signup.php" method="POST">
         <div class="form-column">
           <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="fullName" required />
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required />
           </div>
           <div class="form-group">
             <label for="username">Username</label>
@@ -291,16 +520,21 @@
 
         <div class="form-column">
           <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" required />
+            <label for="signup-email">Email Address</label>
+            <input type="email" id="signup-email" name="email" required />
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <label for="signup-password">Password</label>
+            <input
+              type="password"
+              id="signup-password"
+              name="password"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="photo">Profile Photo (URL)</label>
-            <input type="text" id="photo" name="photo" required />
+            <input type="text" id="photo" name="photo" />
           </div>
         </div>
         <button type="submit" class="btn">CREATE ACCOUNT</button>
@@ -310,33 +544,39 @@
         Already have an account? <a href="#" id="signInButton">Sign in</a>
       </div>
     </div>
+
     <div class="signup-container" id="signin">
       <div class="signup-header">
-          <h2 class="typing">Welcome Back</h2>
+        <h2 class="typing">Welcome Back</h2>
       </div>
-      <form method="POST" action="login.php" >
-          <div class="form-group">
-              <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" required>
-          </div>
-          <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" id="password" name="password" required>
-          </div>
-          <button type="submit" class="btn"> SIGN IN</button>
+      <form method="POST" action="login.php">
+        <div class="form-group2">
+          <label for="signin-email">Email Address</label>
+          <input type="email" id="signin-email" name="email" required />
+
+          <label for="signin-password">Password</label>
+          <input
+            type="password"
+            id="signin-password"
+            name="password"
+            required
+          />
+        </div>
+        <button type="submit" class="btn">SIGN IN</button>
       </form>
       <div class="alternative-signup">
-          <p>Or sign in with</p>
-          <div class="social-buttons">
-              <button class="social-btn"><i class="fab fa-google"></i></button>
-              <button class="social-btn"><i class="fab fa-apple"></i></button>
-          </div>
+        <p>Or sign in with</p>
+        <div class="social-buttons">
+          <button class="social-btn"><i class="fab fa-google"></i></button>
+          <button class="social-btn"><i class="fab fa-apple"></i></button>
+        </div>
       </div>
 
       <div class="login-link">
-          Don't have an account? <a href="" id="signUpButton">Sign up here</a>
+        Don't have an account? <a href="#" id="signUpButton">Sign up here</a>
       </div>
-  </div>
+    </div>
+
     <div class="shape"></div>
     <div class="shape"></div>
     <div class="shape"></div>
@@ -345,6 +585,37 @@
     <div class="shape"></div>
     <div class="shape"></div>
     <div class="shape"></div>
-    <script src="script.js"></script>
+    <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/04/10/13/20250410134013-EU7JN72K.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const signInForm = document.getElementById("signin");
+        const signUpForm = document.getElementById("signup");
+        const signInButtons = document.querySelectorAll(
+          "#signInButton, #signInButtonNav"
+        );
+        const signUpButtons = document.querySelectorAll(
+          "#signUpButton, .signUpButtonNav"
+        );
+
+        // Handle sign in buttons
+        signInButtons.forEach((button) => {
+          button.addEventListener("click", function (e) {
+            e.preventDefault();
+            signUpForm.style.display = "none";
+            signInForm.style.display = "flex";
+          });
+        });
+
+        // Handle sign up buttons
+        signUpButtons.forEach((button) => {
+          button.addEventListener("click", function (e) {
+            e.preventDefault();
+            signInForm.style.display = "none";
+            signUpForm.style.display = "flex";
+          });
+        });
+      });
+    </script>
   </body>
 </html>

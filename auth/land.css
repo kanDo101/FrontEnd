@@ -511,24 +511,27 @@ h1 {
 }
 
 .testimonials-container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 60px auto 0;
     position: relative;
+    display: flex; /* This makes the cards appear in a row */
+    justify-content: space-between; /* Space cards evenly */
+    gap: 20px; /* Add spacing between cards */
 }
 
 .testimonial-card {
     background-color: var(--card-bg);
-    padding: 40px;
+    padding: 30px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     text-align: center;
-    margin: 20px auto;
-    max-width: 800px;
+    width: calc(33.33% - 14px); /* Set width to approximately one-third, accounting for gap */
+    flex-shrink: 0; /* Prevent cards from shrinking */
 }
 
 .testimonial-avatar {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     margin: 0 auto 20px;
     overflow: hidden;
@@ -542,11 +545,11 @@ h1 {
 }
 
 .testimonial-quote {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-style: italic;
     margin-bottom: 20px;
     position: relative;
-    padding: 0 30px;
+    padding: 0 20px;
 }
 
 .testimonial-quote::before,
@@ -578,26 +581,19 @@ h1 {
     font-size: 0.9rem;
 }
 
-.testimonial-indicator {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 30px;
+/* Add responsive behavior */
+@media (max-width: 900px) {
+    .testimonials-container {
+        flex-direction: column; /* Stack cards on small screens */
+    }
+    
+    .testimonial-card {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 }
 
-.indicator-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #ddd;
-    cursor: pointer;
-    transition: var(--transition);
-}
 
-.indicator-dot.active {
-    background-color: var(--primary-color);
-    transform: scale(1.2);
-}
 
 .cta-section {
     padding: 100px 5%;
