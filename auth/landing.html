@@ -15,47 +15,7 @@
     <link rel="stylesheet" href="land.css" />
     <script src="../helper/toggle.js"></script>
   </head>
-  <script>
-    
-    document.addEventListener("DOMContentLoaded", function () {
-      const testimonials = document.querySelectorAll(".testimonial-card");
-      const indicators = document.querySelectorAll(".indicator-dot");
-      let currentIndex = 0;
-      const intervalTime = 5000;
-      let autoSlide = setInterval(nextTestimonial, intervalTime);
-
-      function showTestimonial(index) {
-        testimonials.forEach((testimonial, i) => {
-          testimonial.style.display = i === index ? "block" : "none";
-        });
-
-        indicators.forEach((dot, i) => {
-          dot.classList.toggle("active", i === index);
-        });
-
-        currentIndex = index;
-      }
-
-      function nextTestimonial() {
-        let newIndex = (currentIndex + 1) % testimonials.length;
-        showTestimonial(newIndex);
-      }
-
-      function selectTestimonial(event) {
-        clearInterval(autoSlide);
-        let selectedIndex = Array.from(indicators).indexOf(event.target);
-        showTestimonial(selectedIndex);
-        autoSlide = setInterval(nextTestimonial, intervalTime);
-      }
-
-      indicators.forEach((dot) =>
-        dot.addEventListener("click", selectTestimonial)
-      );
-
-      showTestimonial(currentIndex);
-    });
-  </script>
-
+  
   <body>
     <nav class="navbar" id="navbar">
       <div class="logo"><i class="fas fa-tasks"></i> Kando</div>
@@ -98,7 +58,7 @@
         </p>
 
         <div class="hero-buttons">
-          <a href="./signUp/signUP.html">
+          <a href="./signUp&signin/signup.html">
             <button
               class="btn animate__animated animate__fadeInUp animate__delay-1s"
             >
@@ -237,7 +197,7 @@
       </div>
 
       <div class="testimonials-container">
-        <div class="testimonial-card animate__animated animate__fadeInUp">
+        <div class="testimonial-card">
           <div class="testimonial-avatar">
             <img
               src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg"
@@ -249,38 +209,6 @@
           </div>
           <div class="testimonial-author">Alex Darwin</div>
           <div class="testimonial-position">CTO, TechSavvy Solutions</div>
-        </div>
-        <div class="testimonial-card animate__animated animate__fadeInUp">
-          <div class="testimonial-avatar">
-            <img
-              src="https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg?semt=ais_hybrid"
-              alt="Alex Darwin"
-            />
-          </div>
-          <div class="testimonial-quote">
-            We've cut meeting time by 30% and increased delivery speed by 25%.
-          </div>
-          <div class="testimonial-author">Alex Darwin</div>
-          <div class="testimonial-position">CTO, TechSavvy Solutions</div>
-        </div>
-        <div class="testimonial-card animate__animated animate__fadeInUp">
-          <div class="testimonial-avatar">
-            <img
-              src="data:image/jpeg;base64,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"
-              alt="Alex Darwin"
-            />
-          </div>
-          <div class="testimonial-quote">
-            The customizable workflows and analytics have been game-changers for
-            us!
-          </div>
-          <div class="testimonial-author">Alex Darwin</div>
-          <div class="testimonial-position">CTO, TechSavvy Solutions</div>
-        </div>
-        <div class="testimonial-indicator">
-          <span class="indicator-dot active"></span>
-          <span class="indicator-dot"></span>
-          <span class="indicator-dot"></span>
         </div>
       </div>
     </section>
@@ -336,6 +264,6 @@
       </div>
     </footer>
     <script src="https://cdn.botpress.cloud/webchat/v2.3/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2025/03/26/12/20250326122005-6BUO1W3P.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/04/10/13/20250410134013-EU7JN72K.js"></script>
   </body>
 </html>
